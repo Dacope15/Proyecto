@@ -1,0 +1,21 @@
+@startuml Diagrama de actividades
+start
+:Cliente crea caso;
+:Caso almacenado en BD con estado 'Pendiente';
+:Coordinador revisa caso nuevo;
+:Selecciona técnico disponible;
+:Caso actualizado a 'Asignado';
+:Técnico visualiza caso;
+:Técnico atiende el caso en sitio;
+:Técnico carga evidencias;
+:Motor IA valida contenido;
+if (Evidencias válidas?) then (Sí)
+  :Caso pasa a revisión del coordinador;
+  :Coordinador aprueba cierre;
+  :Caso cerrado con resumen técnico;
+else (No)
+  :Sistema sugiere correcciones;
+  :Técnico corrige evidencias;
+endif
+stop
+@enduml

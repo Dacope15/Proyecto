@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Soporte - Registros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>📋 Registros en soporte-db</h1>
+
+    <form method="GET" action="/">
+        <input type="text" name="buscar" placeholder="Buscar por nombre o descripción..." value="{{ buscar }}">
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titulo</th>
+                <th>Descripción</th>
+                <th>Fecha de creacion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in resultados %}
+            <tr>
+                <td>{{ fila['id'] }}</td>
+                <td>{{ fila['titulo'] }}</td>
+                <td>{{ fila['descripcion'] }}</td>
+                <td>{{ fila['fecha_creacion'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,61 @@
+@startuml secuencia_soporte_tecnico
+title Diagrama de Secuencia 
+
+actor Cliente
+actor Coordinador
+actor Técnico
+
+participant "Frontend Web/App"
+participant "Servidor Flask"
+participant "Motor IA"
+database "Base de Datos"
+
+== CREACIÓN DEL CASO ==
+Cliente -> "Frontend Web/App" : Completa formulario de caso
+"Frontend Web/App" -> "Servidor Flask" : POST /crear_caso
+"Servidor Flask" -> "Base de Datos" : Insertar nuevo caso (estado: pendiente)
+"Base de Datos" --> "Servidor Flask" : OK
+"Servidor Flask" --> "Frontend Web/App" : Confirmación de caso creado
+
+== ASIGNACIÓN DEL CASO ==
+Coordinador -> "Frontend Web/App" : Accede a lista de casos pendientes
+"Frontend Web/App" -> "Servidor Flask" : GET /casos_pendientes
+"Servidor Flask" -> "Base de Datos" : Consulta casos estado 'pendiente'
+"Base de Datos" --> "Servidor Flask" : Lista de casos
+"Servidor Flask" --> "Frontend Web/App" : Renderiza vista
+Coordinador -> "Frontend Web/App" : Asigna técnico al caso
+"Frontend Web/App" -> "Servidor Flask" : PUT /asignar_tecnico
+"Servidor Flask" -> "Base de Datos" : Actualiza caso (estado: asignado)
+"Base de Datos" --> "Servidor Flask" : OK
+
+== GESTIÓN DEL CASO EN SITIO ==
+Técnico -> "Frontend Web/App" : Revisa casos asignados
+"Frontend Web/App" -> "Servidor Flask" : GET /casos_tecnico
+"Servidor Flask" -> "Base de Datos" : Consulta por técnico_id
+"Base de Datos" --> "Servidor Flask" : Datos de caso
+"Servidor Flask" --> "Frontend Web/App" : Mostrar caso
+Técnico -> "Frontend Web/App" : Carga foto y texto evidencia
+"Frontend Web/App" -> "Servidor Flask" : POST /subir_evidencia
+"Servidor Flask" -> "Motor IA" : validar(imagen, texto)
+"Motor IA" --> "Servidor Flask" : Resultado de validación + resumen
+alt Evidencia válida
+    "Servidor Flask" -> "Base de Datos" : Guardar evidencia + resumen IA
+    "Base de Datos" --> "Servidor Flask" : OK
+    "Servidor Flask" --> "Frontend Web/App" : Confirmación de envío exitoso
+else Evidencia requiere corrección
+    "Servidor Flask" --> "Frontend Web/App" : Mostrar sugerencias para corrección
+end
+
+== REVISIÓN Y CIERRE ==
+Coordinador -> "Frontend Web/App" : Revisa evidencias del caso
+"Frontend Web/App" -> "Servidor Flask" : GET /ver_evidencias
+"Servidor Flask" -> "Base de Datos" : Obtener evidencias + resumen IA
+"Base de Datos" --> "Servidor Flask" : Datos completos
+"Servidor Flask" --> "Frontend Web/App" : Renderiza revisión
+Coordinador -> "Frontend Web/App" : Cierra el caso
+"Frontend Web/App" -> "Servidor Flask" : PUT /cerrar_caso
+"Servidor Flask" -> "Base de Datos" : Actualiza estado a 'cerrado'
+"Base de Datos" --> "Servidor Flask" : OK
+"Servidor Flask" --> "Frontend Web/App" : Confirmación de cierre
+
+@enduml

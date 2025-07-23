@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Caso</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h2>Crear un nuevo caso</h2>
+  <form method="POST">
+    <label for="titulo">Título del caso:</label>
+    <input type="text" id="titulo" name="titulo" required>
+
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" name="descripcion" rows="5" required></textarea>
+
+    <button type="submit">Registrar Caso</button>
+  </form>
+
+  <h3>Casos registrados</h3>
+  <ul>
+    {% for caso in casos %}
+      <li><strong>{{ caso.titulo }}</strong> — {{ caso.estado }} ({{ caso.fecha_creacion.strftime('%d/%m/%Y %H:%M') }})</li>
+    {% else %}
+      <li>No hay casos registrados todavía.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

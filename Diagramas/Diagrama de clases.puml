@@ -1,0 +1,91 @@
+@startuml clases_soporte_tecnico
+title Diagrama de Clases 
+
+' Actores principales
+class Cliente {
+  +id : int
+  +nombre : string
+  +email : string
+  +crearCaso() : void
+  +verEstadoCaso() : Caso[]
+}
+
+class Tecnico {
+  +id : int
+  +nombre : string
+  +cargo : string
+  +verCasosAsignados() : Caso[]
+  +subirEvidencia(caso_id: int) : Evidencia
+}
+
+class Coordinador {
+  +id : int
+  +nombre : string
+  +area : string
+  +asignarCaso(caso_id: int, tecnico_id: int) : void
+  +validarSolucion(caso_id: int) : boolean
+  +cerrarCaso(caso_id: int) : void
+  +verPanelMetrico() : Reporte[]
+}
+
+' Entidades principales
+class Caso {
+  +id : int
+  +titulo : string
+  +descripcion : string
+  +estado : string
+  +fecha_creacion : datetime
+  +fecha_asignacion : datetime
+  +fecha_cierre : datetime
+  +cliente_id : int
+  +tecnico_id : int
+  +resumen_ia : string
+  +getEvidencias() : Evidencia[]
+}
+
+class Evidencia {
+  +id : int
+  +tipo : string
+  +archivo_url : string
+  +comentario : string
+  +validado_ia : boolean
+  +resumen_generado : string
+  +fecha_subida : datetime
+  +caso_id : int
+}
+
+class Inventario {
+  +id : int
+  +codigo_equipo : string
+  +descripcion : string
+  +estado : string
+  +cliente_id : int
+  +getHistorialMantenimiento() : Mantenimiento[]
+}
+
+class Mantenimiento {
+  +id : int
+  +inventario_id : int
+  +fecha : datetime
+  +descripcion : string
+  +repuestos_usados : string
+}
+
+' Motor de inteligencia artificial
+class MotorIA {
+  +validarImagen(imagen) : boolean
+  +validarTexto(texto) : boolean
+  +generarResumen(texto) : string
+}
+
+' Relación entre clases
+Cliente "1" -- "0..*" Caso : crea
+Caso "1" -- "0..*" Evidencia : contiene
+Caso "1" --> "1" Tecnico : asignado a
+Caso "1" --> "1" Coordinador : gestionado por
+Caso "0..*" --> "1" Inventario : vinculado a
+Inventario "1" -- "0..*" Mantenimiento : tiene
+Tecnico --> MotorIA : usa
+Evidencia --> MotorIA : validada por
+
+@enduml

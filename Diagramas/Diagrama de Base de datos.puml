@@ -1,0 +1,82 @@
+@startuml bd_soporte_tecnico
+title Diagrama de Base de Datos – Sistema de Soporte Técnico
+
+entity "Clientes" {
+  *id : INT
+  nombre : VARCHAR
+  email : VARCHAR
+  telefono : VARCHAR
+}
+
+entity "Tecnicos" {
+  *id : INT
+  nombre : VARCHAR
+  cargo : VARCHAR
+  especialidad : VARCHAR
+}
+
+entity "Coordinadores" {
+  *id : INT
+  nombre : VARCHAR
+  area : VARCHAR
+}
+
+entity "Casos" {
+  *id : INT
+  titulo : VARCHAR
+  descripcion : TEXT
+  estado : VARCHAR
+  fecha_creacion : DATETIME
+  fecha_asignacion : DATETIME
+  fecha_cierre : DATETIME
+  cliente_id : INT
+  tecnico_id : INT
+  coordinador_id : INT
+  resumen_ia : TEXT
+}
+
+entity "Evidencias" {
+  *id : INT
+  tipo : VARCHAR
+  archivo_url : TEXT
+  comentario : TEXT
+  validado_ia : BOOLEAN
+  resumen_ia : TEXT
+  fecha_subida : DATETIME
+  caso_id : INT
+}
+
+entity "Inventario" {
+  *id : INT
+  codigo_equipo : VARCHAR
+  descripcion : VARCHAR
+  estado_equipo : VARCHAR
+  cliente_id : INT
+}
+
+entity "Mantenimiento" {
+  *id : INT
+  inventario_id : INT
+  fecha : DATETIME
+  descripcion : TEXT
+  repuestos_usados : TEXT
+}
+
+entity "Historial_Log" {
+  *id : INT
+  entidad : VARCHAR
+  accion : VARCHAR
+  usuario : VARCHAR
+  fecha_hora : DATETIME
+  referencia_id : INT
+}
+
+Clientes ||--o{ Casos : "reporta"
+Tecnicos ||--o{ Casos : "atiende"
+Coordinadores ||--o{ Casos : "gestiona"
+Casos ||--o{ Evidencias : "documenta"
+Clientes ||--o{ Inventario : "posee"
+Inventario ||--o{ Mantenimiento : "mantenimiento"
+Casos ||--o{ Historial_Log : "registro de eventos"
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml Casos de uso
+left to right direction
+
+actor Cliente
+actor Coordinador
+actor Técnico
+rectangle Plataforma {
+  Cliente --> (Crear caso de soporte)
+  Cliente --> (Revisar estado del caso)
+  Coordinador --> (Asignar caso a técnico)
+  Coordinador --> (Validar solución y cerrar caso)
+  Coordinador --> (Ver métricas y panel de seguimiento)
+  Técnico --> (Recibir caso asignado)
+  Técnico --> (Subir evidencias con IA)
+  Técnico --> (Actualizar estado del caso)
+}
+@enduml
